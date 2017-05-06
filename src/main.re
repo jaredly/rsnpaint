@@ -17,7 +17,7 @@ let miny = 50.0;
 let draw {ctx, x, y, dx, dy, ticks} => {
   let (dx, nx) = bounce x dx minx 300.0;
   let (dy, ny) = bounce y dy miny 450.0;
-  let hue = mod_float ((float_of_int ticks) /. 10.0) 360.0;
+  let hue = mod_float ((float_of_int ticks) /. 5.0) 360.0;
   let saturation = 100.0; /* -. (float_of_int ticks) /. 2000.0 *. 100.0; */
   let color = Printf.sprintf "hsl(%f, %f%%, 50%%)" hue saturation;
   Canvas.setFillStyle ctx color;
@@ -35,7 +35,7 @@ let draw {ctx, x, y, dx, dy, ticks} => {
 let main () => {
   let ctx = Draw.createCtx Bdom.document;
   Canvas.setFillStyle ctx "black";
-  let faster = 3.0;
+  let faster = 10.0;
   let dx = 2.325 *. faster;
   let dy = 1.333 *. faster;
   let state = ref {ctx, x: minx, y: miny, dx, dy, ticks: 0};

@@ -14,7 +14,7 @@ Random.self_init ();
 
 let initial ctx => {
   ctx,
-  boids: repeat 10 (fun () => U.randomBoid 500.0 500.0),
+  boids: repeat 5 (fun () => U.randomBoid 500.0 500.0),
   width: 500.0,
   height: 500.0
 };
@@ -29,7 +29,7 @@ let draw ({ctx, boids, width, height}: state) => {
       fun boid => {
         let {x, y, theta} = boid;
         U.triangle ctx x y 8.0 12.0 (theta -. U.pi /. 2.0);
-        Dom.Canvas.setFillStyle ctx "rgba(0, 0, 0, 0.1)";
+        Dom.Canvas.setFillStyle ctx "rgba(0, 0, 0, 0.05)";
         U.circle ctx x y Flocking.tooFar;
         U.circle ctx x y Flocking.far;
         U.circle ctx x y Flocking.tooClose

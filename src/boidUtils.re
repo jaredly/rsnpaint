@@ -10,7 +10,7 @@ let randomBoid width height => {
   x: Random.float width,
   y: Random.float height,
   theta: Random.float pi,
-  speed: 0.0,
+  speed: Random.float 2.0,
   dt: 0.0,
   dv: 0.0
 };

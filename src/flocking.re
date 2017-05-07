@@ -6,7 +6,7 @@ let calcDist {x, y} {x: x2, y: y2} => sqrt (s2 (x2 -. x) +. s2 (y2 -. y));
 
 let tooFar = 100.0;
 
-let far = 60.0;
+let far = 40.0;
 
 let tooClose = 20.0;
 
@@ -23,14 +23,14 @@ let vectorAdd t1 v1 t2 v2 => {
 let pushAway boid {x: ox, y: oy} => {
   let {x, y, theta, speed} = boid;
   let newt = atan2 (y -. oy) (x -. ox);
-  let (theta, speed) = vectorAdd theta speed newt 0.2;
+  let (theta, speed) = vectorAdd theta speed newt 0.1;
   {...boid, theta, speed}
 };
 
 let goTowards boid {x: ox, y: oy} => {
   let {x, y, theta, speed} = boid;
   let newt = atan2 (y -. oy) (x -. ox);
-  let (theta, speed) = vectorAdd theta speed newt (-0.2);
+  let (theta, speed) = vectorAdd theta speed newt (-0.05);
   {...boid, theta, speed}
 };
 
@@ -61,7 +61,9 @@ let findClosest (d, o, boid) other =>
     (d, o, boid)
   } else {
     let dist = calcDist boid other;
-    if (dist < d) {
+    if (dist < tooClose) {
+      (d, o, pushAway boid other)
+    } else if (dist < d && dist > far) {
       (dist, other, boid)
     } else {
       (d, o, boid)
@@ -70,7 +72,7 @@ let findClosest (d, o, boid) other =>
 
 let boidBehavior (boids: list boid) boid => {
   let (dist, closest, _) = List.fold_left findClosest (infinity, List.hd boids, boid) boids;
-  print_endline (Printf.sprintf "Foind %f" dist);
+  /*print_endline (Printf.sprintf "Foind %f" dist);*/
   /*limitSpeed (List.fold_left reactToBoid boid boids)*/
-  reactToBoid boid closest dist
+  limitSpeed (reactToBoid boid closest dist)
 };

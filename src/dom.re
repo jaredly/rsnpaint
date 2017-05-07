@@ -34,6 +34,10 @@ external createImg : document => _ [@bs.as "img"] => imageElement = "createEleme
 
 let addCanvasToBody doc canvas => appendCanvas (getBody doc) canvas;
 
+external setTimeout : (unit => unit) => int => int = "" [@@bs.val];
+
+external clearTimeout : int => unit = "" [@@bs.val];
+
 external requestAnimationFrame : (float => unit) => int = "" [@@bs.val];
 
 external cancelAnimationFrame : int => unit = "" [@@bs.val];
@@ -87,7 +91,7 @@ let createCanvas doc (width: int) (height: int) => {
 };
 
 let createCtx (doc: document) => {
-  let canv = createCanvas doc 500 500;
+  let canv = createCanvas doc 1000 500;
   addCanvasToBody doc canv;
   getContext canv
 };

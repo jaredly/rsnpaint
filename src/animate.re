@@ -9,9 +9,7 @@ let loop draw => {
   Dom.cancelAnimationFrame !rafid;
   let rec inner _ => {
     draw ();
-    if !looping {
-      rafid := Dom.requestAnimationFrame inner
-    }
+    if !looping { rafid := Dom.requestAnimationFrame inner }
   };
   inner 0.0
 };

@@ -15,6 +15,15 @@ let randomBoid width height => {
   dv: 0.0
 };
 
+let placedBoid x y => {
+  x,
+  y,
+  theta: Random.float pi,
+  speed: Random.float 2.0,
+  dt: 0.0,
+  dv: 0.0
+};
+
 let s2 x => x *. x;
 
 let rot_around x y cx cy t => {

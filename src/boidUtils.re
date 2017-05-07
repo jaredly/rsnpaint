@@ -57,7 +57,7 @@ let triangle ctx x y w h r => {
   Dom.Canvas.stroke ctx
 };
 
-let circle ctx x y r => {
+let circle ctx (x, y) r => {
   Dom.Canvas.beginPath ctx;
   Dom.Canvas.ellipse ctx x y r r 0.0 0.0 (2.0 *. pi);
   Dom.Canvas.fill ctx

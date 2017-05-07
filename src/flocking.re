@@ -5,6 +5,7 @@ let s2 x => x *. x;
 let calcDist {x, y} {x: x2, y: y2} => sqrt (s2 (x2 -. x) +. s2 (y2 -. y));
 
 let calcDir {x, y} {x: x2, y: y2} => atan2 (y2 -. y) (x2 -. x);
+let calcDirToPos {x, y} (x2, y2) => atan2 (y2 -. y) (x2 -. x);
 
 let tooFar = 100.0;
 
@@ -105,15 +106,17 @@ let findNeighbors boids boid =>
     []
     boids;
 
-let avoid_dist = 20.0;
+let avoid_dist = 30.0;
 
-let cohere_min = 50.0;
+let cohere_min = 60.0;
 
-let align_coeff = 0.01;
+let align_coeff = 0.001;
 
 let cohere_coeff = 0.0001;
 
-let separate_coeff = 10.0;
+let separate_coeff = 1.0;
+
+let goal_coeff = 0.005;
 
 let vmul n (t, d) => (t, d *. n);
 
@@ -149,13 +152,14 @@ let cohere neighbors =>
   }) (0.0, 0.0) neighbors |>
   vmul cohere_coeff;
 
-let boidBehavior2 boids boid => {
+let boidBehavior2 boids boid goal repel => {
   let neighbors = findNeighbors boids boid;
   /*Js.log neighbors;*/
   let sep = separate neighbors;
   let coh = cohere neighbors;
   let ali = align neighbors;
-  let acceleration = sep |> vectorAdd coh |> vectorAdd ali;
+  let go = (calcDirToPos boid goal, if repel { -. goal_coeff } else { goal_coeff });
+  let acceleration = sep |> vectorAdd coh |> vectorAdd ali |> vectorAdd go;
   let (theta, speed) = vectorAdd (boid.theta, boid.speed) acceleration;
   (sep, coh, ali, {...boid, theta, speed: limit speed 2.0})
 };

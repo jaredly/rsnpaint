@@ -110,13 +110,14 @@ let avoid_dist = 30.0;
 
 let cohere_min = 60.0;
 
-let align_coeff = 0.001;
+let align_coeff = 0.01;
 
-let cohere_coeff = 0.0001;
+let cohere_coeff = 0.0005;
 
 let separate_coeff = 1.0;
 
-let goal_coeff = 0.005;
+let goal_coeff = 0.05;
+let repel_coeff = -0.5;
 
 let vmul n (t, d) => (t, d *. n);
 
@@ -142,15 +143,16 @@ let align neighbors => {
   v |> vmul align_coeff |> vmul (if (n > 0) { 1.0 /. (float_of_int n) } else {1.0});
 };
 
-let cohere neighbors =>
-  List.fold_left (fun v (d, t, _) => {
+let cohere neighbors => {
+  let (n, v) = List.fold_left (fun (n, v) (d, t, _) => {
     if (d > cohere_min) {
-      vectorAdd v (t, d /. 3.0)
+      (n + 1, vectorAdd v (t, d /. 3.0))
     } else {
-      v
+      (n, v)
     }
-  }) (0.0, 0.0) neighbors |>
-  vmul cohere_coeff;
+  }) (0, (0.0, 0.0)) neighbors;
+  v |> vmul (cohere_coeff /. if (n > 0) { float_of_int n } else { 1.0 });
+};
 
 let boidBehavior2 boids boid goal repel => {
   let neighbors = findNeighbors boids boid;
@@ -158,7 +160,17 @@ let boidBehavior2 boids boid goal repel => {
   let sep = separate neighbors;
   let coh = cohere neighbors;
   let ali = align neighbors;
-  let go = (calcDirToPos boid goal, if repel { -. goal_coeff } else { goal_coeff });
+  /*let go = (0.0, 0.0);*/
+  let godist = BoidUtils.dist (boid.x, boid.y) goal;
+  let repel = repel || (godist < 50.0);
+  let gov = if (repel || (godist < 20.0)) {
+    repel_coeff
+  } else if (godist < 200.0) {
+    goal_coeff
+  } else {
+    0.0
+  };
+  let go = (calcDirToPos boid goal, gov);
   let acceleration = sep |> vectorAdd coh |> vectorAdd ali |> vectorAdd go;
   let (theta, speed) = vectorAdd (boid.theta, boid.speed) acceleration;
   (sep, coh, ali, {...boid, theta, speed: limit speed 2.0})

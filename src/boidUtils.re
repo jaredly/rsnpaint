@@ -26,6 +26,8 @@ let placedBoid x y => {
 
 let s2 x => x *. x;
 
+let dist (x, y) (a, b) => sqrt (s2 (x -. a) +. s2 (y -. b));
+
 let rot_around x y cx cy t => {
   let ct = atan2 (y -. cy) (x -. cx);
   let d = sqrt (s2 (x -. cx) +. s2 (y -. cy));
@@ -54,13 +56,19 @@ let triangle ctx x y w h r => {
   Dom.Canvas.lineTo ctx x2 y2;
   Dom.Canvas.lineTo ctx x3 y3;
   Dom.Canvas.lineTo ctx x1 y1;
-  Dom.Canvas.stroke ctx
+  Dom.Canvas.fill ctx
 };
 
 let circle ctx (x, y) r => {
   Dom.Canvas.beginPath ctx;
   Dom.Canvas.ellipse ctx x y r r 0.0 0.0 (2.0 *. pi);
   Dom.Canvas.fill ctx
+};
+
+let circleLine ctx (x, y) r => {
+  Dom.Canvas.beginPath ctx;
+  Dom.Canvas.ellipse ctx x y r r 0.0 0.0 (2.0 *. pi);
+  Dom.Canvas.stroke ctx
 };
 
 let wrap n max =>

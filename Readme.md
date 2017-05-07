@@ -2,7 +2,7 @@
 
 How to get running
 
-```
+```bash
 git clone https://github.com/jaredly/rsnpaint
 cd rsnpaint
 yarn

@@ -56,6 +56,8 @@ module Canvas = {
   external setStrokeWidth : ctx => float => unit = "lineWidth" [@@bs.set];
   external fillRect : ctx => float => float => float => float => unit = "" [@@bs.send];
   external clearRect : ctx => float => float => float => float => unit = "" [@@bs.send];
+  external ellipse : ctx => float => float => float => float => float => float => float => unit =
+    "" [@@bs.send];
   external moveTo : ctx => float => float => unit = "" [@@bs.send];
   external lineTo : ctx => float => float => unit = "" [@@bs.send];
   external fill : ctx => unit = "" [@@bs.send];
